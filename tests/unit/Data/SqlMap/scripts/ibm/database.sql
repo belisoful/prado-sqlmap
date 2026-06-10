@@ -1,6 +1,6 @@
 -- IBM DB2 SqlMap test database schema.
 -- Statements separated by semicolons for DefaultScriptRunner compatibility.
--- Requires IBM DB2 11.1+ for DROP TABLE IF EXISTS.
+-- Requires IBM DB2 11.1+ for DROP TABLE IF EXISTS / DROP SEQUENCE IF EXISTS.
 
 DROP TABLE IF EXISTS LineItems;
 DROP TABLE IF EXISTS Orders;
@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS C;
 DROP TABLE IF EXISTS D;
 DROP TABLE IF EXISTS E;
 DROP TABLE IF EXISTS F;
-DROP SEQUENCE categories_seq;
+DROP SEQUENCE IF EXISTS categories_seq;
 
 CREATE TABLE C (
     ID VARCHAR(50) NOT NULL PRIMARY KEY,
