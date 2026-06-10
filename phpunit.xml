@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./tests/test_tools/phpunit_bootstrap.php" colors="true" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" cacheDirectory=".phpunit.cache">
+  <testsuites>
+	<testsuite name="unit">
+	  <!-- Pure unit tests — no database required -->
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/Configuration</directory>
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DataMapper</directory>
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/Statements</directory>
+	  <file>./tests/unit/Data/SqlMap/SqlMapCacheTest.php</file>
+	  <file>./tests/unit/Data/SqlMap/SqlMapSleepTest.php</file>
+	  <file>./tests/unit/Data/SqlMap/StatementExtendsTest.php</file>
+	  <file>./tests/unit/Data/SqlMap/Ticket589Test.php</file>
+	</testsuite>
+	<!-- Driver-specific integration test suites — used by dedicated CI jobs only. -->
+	<testsuite name="db-mysql">
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DbSpecific/Mysql</directory>
+	</testsuite>
+	<testsuite name="db-pgsql">
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DbSpecific/Pgsql</directory>
+	</testsuite>
+	<testsuite name="db-sqlite">
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DbSpecific/sqlite</directory>
+	</testsuite>
+	<testsuite name="db-firebird">
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DbSpecific/Firebird</directory>
+	</testsuite>
+	<testsuite name="db-sqlsrv">
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DbSpecific/SqlSrv</directory>
+	</testsuite>
+	<testsuite name="db-oracle">
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DbSpecific/Oracle</directory>
+	</testsuite>
+	<testsuite name="db-ibm">
+	  <directory suffix="Test.php">./tests/unit/Data/SqlMap/DbSpecific/Ibm</directory>
+	</testsuite>
+  </testsuites>
+  <logging>
+	<testdoxHtml outputFile="./build/tests/index.html"/>
+  </logging>
+  <extensions>
+  </extensions>
+  <php>
+	<ini name="memory_limit" value="1G"/>
+	<const name="PRADO_TEST_RUN" value="true"/>
+  </php>
+</phpunit>
