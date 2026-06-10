@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sqlMapConfig>
+
+	<properties>
+		<property name="selectKey" value="select @@IDENTITY as value" />
+		<property name="MyCategoryName" value="'Film'" />
+		<property name="accountName" value="'Joe'" />
+	</properties>
+			
+	<typeHandlers>
+		<typeHandler dbType="Varchar" class="OuiNonBool"/>
+		<typeHandler dbType="date" class="TDateTimeHandler" />
+	</typeHandlers>
+	
+	<sqlMaps>
+		<sqlMap name="Account" resource="Account.xml"/>
+		<sqlMap name="DynamicAccount" resource="DynamicAccount.xml"/>
+		<sqlMap name="Order" resource="Order.xml"/>
+		<sqlMap name="Category" resource="Category.xml"/>
+		<sqlMap name="Complex" resource="Complex.xml"/>
+		<sqlMap name="LineItem" resource="LineItem.xml"/>
+		<sqlMap name="Enumeration" resource="Enumeration.xml"/>
+		<sqlMap name="Other" resource="Other.xml"/>
+		<sqlMap name="ResultClass" resource="ResultClass.xml"/>
+		<sqlMap name="Document" resource="Document.xml"/>
+		<sqlMap resource="ActiveRecord.xml"/>
+	</sqlMaps>
+	
+</sqlMapConfig>
