@@ -1,10 +1,10 @@
-name: PRADO SqlMap Extension
+name: PRADO SqlMap
 on: [push, pull_request]
 env:
   PHP_VERSION: '8.2'
 jobs:
   prado-sqlmap:
-    name: PRADO SqlMap
+    name: Unit Tests
     runs-on: ubuntu-latest
     services:
       memcached:
@@ -32,7 +32,7 @@ jobs:
         run: composer validate --strict
 
       - name: Validate code syntax using php-cs-fixer
-        run: php-cs-fixer fix -vvv --dry-run --using-cache=no --format=checkstyle | cs2pr
+        run: php-cs-fixer fix --dry-run --diff --using-cache=no
 
       - name: Get composer cache directory
         id: composer-cache
@@ -55,7 +55,7 @@ jobs:
         run: composer unittest
 
   db-sqlite:
-    name: PRADO SqlMap (SQLite)
+    name: SQLite
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -85,7 +85,7 @@ jobs:
         run: vendor/bin/phpunit --testsuite db-sqlite
 
   db-mysql:
-    name: PRADO SqlMap (MySQL)
+    name: MySQL
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -112,15 +112,13 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup MySQL schema
-        run: |
-          sudo systemctl start mysql.service
-          mysql -uroot -proot < ./tests/unit/Data/SqlMap/scripts/mysql/DataBase.sql
+        run: bash .github/scripts/setup-mysql.sh
 
       - name: Run MySQL tests
         run: vendor/bin/phpunit --testsuite db-mysql
 
   db-pgsql:
-    name: PRADO SqlMap (PostgreSQL)
+    name: PostgreSQL
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -163,17 +161,13 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup PostgreSQL schema
-        run: |
-          createdb -h 127.0.0.1 -U postgres prado_unitest
-          psql -h 127.0.0.1 -U postgres -a -w prado_unitest -f ./tests/unit/Data/SqlMap/scripts/pgsql/database.sql
-        env:
-          PGPASSWORD: postgres
+        run: bash .github/scripts/setup-pgsql.sh
 
       - name: Run PostgreSQL tests
         run: vendor/bin/phpunit --testsuite db-pgsql
 
   db-firebird:
-    name: PRADO SqlMap (Firebird)
+    name: Firebird
     runs-on: ubuntu-latest
     services:
       firebird:
@@ -215,25 +209,13 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup Firebird schema
-        run: |
-          docker cp ./tests/unit/Data/SqlMap/scripts/firebird/database.sql ${{ job.services.firebird.id }}:/tmp/initdb_firebird.sql
-          docker exec ${{ job.services.firebird.id }} bash -c "
-            ISQL=\$(which isql-fb 2>/dev/null || which isql 2>/dev/null)
-            if [ -z \"\$ISQL\" ]; then echo 'isql binary not found'; exit 1; fi
-            OUTPUT=\$(\"\$ISQL\" localhost:/var/lib/firebird/data/prado_unitest.fdb \
-              -user SYSDBA -password masterkey \
-              -i /tmp/initdb_firebird.sql 2>&1)
-            RC=\$?
-            printf '%s\n' \"\$OUTPUT\"
-            echo \"\$OUTPUT\" | grep -q 'Statement failed' && exit 1
-            exit \$RC
-          "
+        run: bash .github/scripts/setup-firebird.sh ${{ job.services.firebird.id }}
 
       - name: Run Firebird tests
         run: vendor/bin/phpunit --testsuite db-firebird
 
   db-sqlsrv:
-    name: PRADO SqlMap (Microsoft SQL Server)
+    name: Microsoft SQL Server
     runs-on: ubuntu-latest
     services:
       mssql:
@@ -272,24 +254,14 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-      - name: Install mssql-tools18
-        run: |
-          curl -sSL -O https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb
-          sudo dpkg -i packages-microsoft-prod.deb
-          sudo apt-get update -qq
-          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
-
       - name: Setup SQL Server schema
-        run: >-
-          /opt/mssql-tools18/bin/sqlcmd -C
-          -U sa -P Prado_Unitest1
-          -i ./tests/unit/Data/SqlMap/scripts/sqlsrv/DBCreation.sql
+        run: bash .github/scripts/setup-sqlsrv.sh
 
       - name: Run SQL Server tests
         run: php vendor/bin/phpunit --testsuite db-sqlsrv
 
   db-oracle:
-    name: PRADO SqlMap (Oracle)
+    name: Oracle
     runs-on: ubuntu-latest
     services:
       oracle:
@@ -310,16 +282,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Oracle Instant Client
-        run: |
-          sudo apt-get install -y libaio1t64 unzip 2>/dev/null || \
-            sudo apt-get install -y libaio1 unzip
-          wget -q -O /tmp/ic.zip \
-            "https://download.oracle.com/otn_software/linux/instantclient/193000/instantclient-basiclite-linux.x64-19.3.0.0.0dbru.zip"
-          sudo unzip -q /tmp/ic.zip -d /opt/oracle
-          echo "/opt/oracle/instantclient_19_3" | sudo tee /etc/ld.so.conf.d/oracle.conf
-          sudo ldconfig
-          echo "ORACLE_HOME=/opt/oracle/instantclient_19_3" >> $GITHUB_ENV
-          echo "LD_LIBRARY_PATH=/opt/oracle/instantclient_19_3" >> $GITHUB_ENV
+        run: bash .github/scripts/install-oracle-client.sh
 
       - name: Setup PHP with OCI extensions
         uses: shivammathur/setup-php@v2
@@ -342,10 +305,7 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup Oracle schema
-        run: |
-          docker cp ./tests/unit/Data/SqlMap/scripts/oracle/database.sql ${{ job.services.oracle.id }}:/tmp/initdb_oracle.sql
-          docker exec -u oracle ${{ job.services.oracle.id }} \
-            bash -c 'source ~/.bash_profile && sqlplus -S prado_unitest/prado_unitest@//localhost/FREEPDB1 @/tmp/initdb_oracle.sql'
+        run: bash .github/scripts/setup-oracle.sh ${{ job.services.oracle.id }}
 
       - name: Run Oracle tests
         run: php vendor/bin/phpunit --testsuite db-oracle
@@ -353,7 +313,7 @@ jobs:
           ORACLE_SERVICE_NAME: FREEPDB1
 
   db-ibm:
-    name: PRADO SqlMap (IBM DB2)
+    name: IBM DB2
     runs-on: ubuntu-latest
     services:
       db2:
@@ -396,10 +356,7 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup IBM DB2 schema
-        run: |
-          docker cp ./tests/unit/Data/SqlMap/scripts/ibm/database.sql ${{ job.services.db2.id }}:/tmp/initdb.sql
-          docker exec ${{ job.services.db2.id }} \
-            su - db2inst1 -c "db2 connect to pradount && db2 -td@ -f /tmp/initdb.sql"
+        run: bash .github/scripts/setup-ibm.sh ${{ job.services.db2.id }}
 
       - name: Run IBM DB2 tests
         run: php vendor/bin/phpunit --testsuite db-ibm
