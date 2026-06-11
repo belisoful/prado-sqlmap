@@ -445,7 +445,6 @@
 			Account_LastName,
 			Account_Email
 			from Accounts
-			order by Account_Id
 		</select>
 
 		<select id="GetAllAccountsOrderByName"
