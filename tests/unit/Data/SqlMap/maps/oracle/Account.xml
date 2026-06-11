@@ -437,7 +437,12 @@
 		</delete>
 
 		<!-- Extends statement -->
-		<select id="GetAllAccounts"
+		<!-- No-order base for the extends statements below.  Oracle (unlike a
+		     small heap scan on other drivers) does not return rows in insertion
+		     order without an explicit ORDER BY, so order-dependent statements add
+		     their own ORDER BY.  The base must end at "from Accounts" so the
+		     extending WHERE/ORDER clauses append to valid SQL. -->
+		<select id="GetAllAccountsBase"
 					resultMap="indexed-account-result">
 			select
 			Account_Id,
@@ -447,23 +452,30 @@
 			from Accounts
 		</select>
 
+		<select id="GetAllAccounts"
+			extends="GetAllAccountsBase"
+			resultMap="indexed-account-result">
+			order by Account_Id
+		</select>
+
 		<select id="GetAllAccountsOrderByName"
-			extends="GetAllAccounts"
+			extends="GetAllAccountsBase"
 			resultMap="indexed-account-result">
 			order by Account_FirstName
 		</select>
 
 		<select id="GetOneAccount"
-			extends="GetAllAccounts"
+			extends="GetAllAccountsBase"
 			resultMap="indexed-account-result">
 			where Account_Id = #value#
 		</select>
 
 		<select id="GetSomeAccount"
-			extends="GetAllAccounts"
+			extends="GetAllAccountsBase"
 			parameterClass="Hashtable"
 			resultMap="indexed-account-result">
 			where Account_Id between #lowID# and #hightID#
+			order by Account_Id
 		</select>
 
 		<select id="SelectAccountJIRA29" parameterClass="map" resultClass="Account">
