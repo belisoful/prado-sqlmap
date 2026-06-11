@@ -13,4 +13,4 @@ sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
 "$SQLCMD" -C -U sa -P Prado_Unitest1 -d prado_unitest \
   -Q "CREATE USER prado_unitest FOR LOGIN prado_unitest; ALTER ROLE db_owner ADD MEMBER prado_unitest;"
 "$SQLCMD" -C -U sa -P Prado_Unitest1 -d prado_unitest \
-  -i ./tests/unit/Data/SqlMap/scripts/sqlsrv/database.sql
+  -i ./tests/unit/Data/SqlMap/scripts/sqlsrv/DataBase.sql
