@@ -52,7 +52,7 @@ jobs:
         run: phpstan analyse --error-format=checkstyle | cs2pr
 
       - name: Run Unit Tests
-        run: composer unittest
+        run: composer test
 
   db-sqlite:
     name: SQLite
