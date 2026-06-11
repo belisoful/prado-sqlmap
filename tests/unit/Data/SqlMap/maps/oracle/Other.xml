@@ -145,12 +145,17 @@
 		Where Other_Int = #value#
 	</statement>
 
+	<!-- V1 reads Bool2 via other-result-V1 (no type handler), so store it as a
+	     plain 0/1 that round-trips through a raw read.  OuiNonBool would store
+	     'Non'/'Oui', which a no-handler read returns as a truthy string.  Oracle
+	     Other_String is NOT NULL, so a 0/1 (not the empty string other drivers
+	     store) keeps the column non-null. -->
 	<statement id="InsertInlineCustomTypeHandlerV1"
 		parameterClass="Other">
 		Insert into Others
 			( Other_Int, Other_Long, Other_Bit, Other_String  )
 		values
-		( #Int#, #Long#, #Bool#, #Bool2,typeHandler=OuiNonBool#)
+		( #Int#, #Long#, #Bool#, #Bool2,type=integer#)
 	</statement>
 
 	<statement id="InsertInlineCustomTypeHandlerV2"
