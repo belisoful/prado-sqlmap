@@ -1,23 +1,24 @@
 -- IBM DB2 SqlMap test database schema.
--- Statements separated by semicolons for DefaultScriptRunner compatibility.
--- Requires IBM DB2 11.1+ for DROP TABLE IF EXISTS.
--- DB2 has no DROP SEQUENCE IF EXISTS; the plain DROP SEQUENCE raises SQL0204N
--- (42704) on a fresh database, which IbmScriptRunner and the CI setup ignore.
+-- Statements separated by semicolons for IbmScriptRunner compatibility.
+-- Plain DROP statements raise SQL0204N (SQLSTATE 42704, object not found) on a
+-- fresh database; IbmScriptRunner and the CI setup ignore that error, so DROP
+-- ... IF EXISTS is not used (its support differs between the DB2 CLP and the
+-- pdo_ibm dynamic-SQL path used by the test suite).
 
-DROP TABLE IF EXISTS LineItems;
-DROP TABLE IF EXISTS Orders;
-DROP TABLE IF EXISTS Accounts;
-DROP TABLE IF EXISTS Categories;
-DROP TABLE IF EXISTS Documents;
-DROP TABLE IF EXISTS Enumerations;
-DROP TABLE IF EXISTS Others;
-DROP TABLE IF EXISTS Users;
-DROP TABLE IF EXISTS A;
-DROP TABLE IF EXISTS B;
-DROP TABLE IF EXISTS C;
-DROP TABLE IF EXISTS D;
-DROP TABLE IF EXISTS E;
-DROP TABLE IF EXISTS F;
+DROP TABLE LineItems;
+DROP TABLE Orders;
+DROP TABLE Accounts;
+DROP TABLE Categories;
+DROP TABLE Documents;
+DROP TABLE Enumerations;
+DROP TABLE Others;
+DROP TABLE Users;
+DROP TABLE A;
+DROP TABLE B;
+DROP TABLE C;
+DROP TABLE D;
+DROP TABLE E;
+DROP TABLE F;
 DROP SEQUENCE categories_seq;
 
 CREATE TABLE C (

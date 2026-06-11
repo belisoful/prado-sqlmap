@@ -66,8 +66,13 @@ class IbmScriptRunner extends DefaultScriptRunner
 			try {
 				$connection->createCommand($line)->execute();
 			} catch (\Exception $e) {
-				// SQLSTATE 42704: undefined name — object does not exist, safe to ignore for DROPs.
-				if (stripos($e->getMessage(), '42704') === false) {
+				// Object does not exist — safe to ignore for DROP statements on a
+				// fresh database. DB2 reports this as SQLSTATE 42704 / SQL0204N.
+				$msg = $e->getMessage();
+				$isObjectNotFound = stripos($msg, '42704') !== false
+					|| stripos($msg, 'SQL0204') !== false
+					|| stripos($msg, '-204') !== false;
+				if (!$isObjectNotFound) {
 					throw $e;
 				}
 			}

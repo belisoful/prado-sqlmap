@@ -1,4 +1,4 @@
-CREATE PROCEDURE dbo.[ps_InsertAccount]
+CREATE OR ALTER PROCEDURE dbo.[ps_InsertAccount]
 @Account_ID  [int], 
 @Account_FirstName [nvarchar] (40),
 @Account_LastName [varchar] (32),
