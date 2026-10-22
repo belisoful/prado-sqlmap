@@ -295,9 +295,9 @@ class TMappedStatement extends \Prado\TComponent implements IMappedStatement
 	{
 		if ($handler instanceof \Closure) {
 			$handler($this, $param);
-		} elseif (is_string($handler)) {
+		} elseif (is_string($handler) || is_object($handler) && is_callable($handler)) {
 			call_user_func($handler, $this, $param);
-		} elseif (is_callable($handler, true)) {
+		} elseif (is_array($handler) && is_callable($handler, true)) {
 			// an array: 0 - object, 1 - method name/path
 			[$object, $method] = $handler;
 			if (is_string($object)) {	// static method call
@@ -423,7 +423,7 @@ class TMappedStatement extends \Prado\TComponent implements IMappedStatement
 	 * @param \Prado\Data\TDbConnection $connection database connection
 	 * @param mixed $parameter insert statement parameter
 	 * @param TSqlMapSelectKey $selectKey select key statement
-	 * @return string last insert ID.
+	 * @return mixed last insert ID.
 	 */
 	protected function executeSelectKey($connection, $parameter, $selectKey)
 	{
@@ -498,7 +498,7 @@ class TMappedStatement extends \Prado\TComponent implements IMappedStatement
 	 * pages through a ROW_NUMBER() subquery, and its outer "SELECT *" returns that helper column.
 	 * @param array $row a result set row retrieved from the database
 	 * @param null|object $resultObject the result object, will create if necessary.
-	 * @return object the result filled with data, null if not filled.
+	 * @return ?object the result filled with data, null if not filled.
 	 */
 	protected function applyResultMap($row, &$resultObject = null)
 	{
