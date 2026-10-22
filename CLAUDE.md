@@ -161,6 +161,7 @@ tests/
 ## Important Rules
 
 - **No `classes.php`** — this is a standalone extension; the PSR-4 autoloader handles class discovery. Do not create a `classes.php`.
+- **`composer.json` `extra.prado`** (Prado 4.4) declares `bootstrap`, `error-messages` (`src/Data/SqlMap/DataMapper/messages.txt`), and `class-map` (`config/classes.json`, short name → FQCN for XML `class="TSqlMapConfig"` style references). Keep the legacy top-level `extra.bootstrap` for Prado 4.3. Add new classes to `config/classes.json`.
 - **`if` statements** always use a block (`{}`), never a single-line body.
 - **Backward compatibility** — all changes must be backward compatible for point releases.
 - **`@since` tag** — use the next release version when adding new methods or classes; omit the method tag when it matches the class tag. Check prado's `CLAUDE.md` for the current next-release version number.

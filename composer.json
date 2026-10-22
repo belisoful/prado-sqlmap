@@ -76,6 +76,11 @@
 		]
 	},
 	"extra": {
-		"bootstrap": "Prado\\Data\\SqlMap\\TSqlMapConfig"
+		"bootstrap": "Prado\\Data\\SqlMap\\TSqlMapConfig",
+		"prado": {
+			"bootstrap": "Prado\\Data\\SqlMap\\TSqlMapConfig",
+			"error-messages": "src/Data/SqlMap/DataMapper/messages.txt",
+			"class-map": "config/classes.json"
+		}
 	}
 }
