@@ -78,9 +78,7 @@ class SqlMapCacheTest extends PHPUnit\Framework\TestCase
 		$fifo->set('k1', $object1);
 		$fifo->set('k2', $object2);
 
-		// delete returns the removed object
-		$removed = $fifo->delete('k1');
-		$this->assertSame($object1, $removed);
+		$this->assertTrue($fifo->delete('k1'));
 
 		// key is gone
 		$this->assertNull($fifo->get('k1'));
@@ -96,20 +94,18 @@ class SqlMapCacheTest extends PHPUnit\Framework\TestCase
 		$lru->set('k1', $object1);
 		$lru->set('k2', $object2);
 
-		$removed = $lru->delete('k1');
-		$this->assertSame($object1, $removed);
+		$this->assertTrue($lru->delete('k1'));
 		$this->assertNull($lru->get('k1'));
 		$this->assertSame($object2, $lru->get('k2'));
 	}
 
-	public function testDeleteExistingReturnsObjectAndRemovesIt()
+	public function testDeleteExistingReturnsTrueAndRemovesIt()
 	{
 		$fifo = new TSqlMapFifoCache();
 		$obj = new TComponent();
 		$fifo->set('k', $obj);
 
-		$removed = $fifo->delete('k');
-		$this->assertSame($obj, $removed);
+		$this->assertTrue($fifo->delete('k'));
 		$this->assertNull($fifo->get('k'));
 	}
 

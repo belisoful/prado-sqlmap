@@ -8,6 +8,7 @@ SqlMap is a data-mapper layer that maps SQL statements defined in XML files to P
 
 | Section | Description |
 |---|---|
+| [Migration](migration.md) | Moving from the framework-bundled SqlMap to this package |
 | [Prado Integration](integration.md) | Registering `TSqlMapConfig` as a PRADO application module, connection configuration, and caching the parsed manager |
 | [Quick Start](quickstart.md) | Minimal working example: config file, mapping file, and PHP calls |
 | [Configuration](configuration/README.md) | `sqlMapConfig` root file reference — properties, type aliases, type handlers, transaction manager, data source, and `sqlMaps` includes |

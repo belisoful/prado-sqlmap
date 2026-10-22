@@ -18,6 +18,8 @@ Within a PRADO Application:
 composer require pradosoft/prado-sqlmap
 ```
 
+Applications upgrading from the SqlMap bundled with the PRADO framework: see the [migration guide](docs/migration.md). Release notes are in the [changelog](CHANGELOG.md).
+
 ## Supported Databases
 
 Any database with a PDO driver. The test suite covers:

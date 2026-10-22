@@ -293,9 +293,7 @@ class TMappedStatement extends \Prado\TComponent implements IMappedStatement
 	 */
 	protected function raiseRowDelegate($handler, $param)
 	{
-		if ($handler instanceof \Closure) {
-			$handler($this, $param);
-		} elseif (is_string($handler) || is_object($handler) && is_callable($handler)) {
+		if (is_string($handler) || is_object($handler) && is_callable($handler)) {
 			call_user_func($handler, $this, $param);
 		} elseif (is_array($handler) && is_callable($handler, true)) {
 			// an array: 0 - object, 1 - method name/path

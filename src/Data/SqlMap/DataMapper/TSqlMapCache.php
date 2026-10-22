@@ -87,16 +87,15 @@ abstract class TSqlMapCache implements ICache
 	}
 
 	/**
-	 * Deletes a value with the specified key from cache and returns the removed object.
+	 * Deletes a value with the specified key from cache
 	 * @param string $key the key of the value to be deleted
-	 * @return mixed the object that was cached under $key, or null if not found
+	 * @return bool if no error happens during deletion
 	 */
 	public function delete($key)
 	{
-		$object = $this->get($key);
 		$this->_cache->remove($key);
 		$this->_keyList->remove($key);
-		return $object;
+		return true;
 	}
 
 	/**
