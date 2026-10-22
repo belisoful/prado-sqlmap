@@ -27,9 +27,9 @@
 		<select id="GetEnumeration" parameterClass="Integer" resultClass="Enumeration">
 			select
 				Enum_ID as Id,
-				Enum_Day as Day,
+				Enum_Day as "Day",
 				Enum_Color as Color,
-				Enum_Month as Month
+				Enum_Month as "Month"
 			from Enumerations  
 			where Enum_ID = #value# 
 		</select>

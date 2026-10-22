@@ -257,7 +257,7 @@
 				parameterClass="int"
 				resultClass="date">
 		select
-		Order_Date as 'datetime'
+		Order_Date as "datetime"
 		from Orders where Order_Id = #value#
 	</statement>
 
@@ -334,15 +334,15 @@
 				parameterClass="Integer"
 				resultClass="Order" >
 		select
-			Orders.Order_Id as Id,
-			Order_Date as Date,
-			Order_CardExpiry as CardExpiry,
-			Order_CardType as CardType,
-			Order_CardNumber as CardNumber,
-			Order_Street as Street,
-			Order_City as City,
-			Order_Province as Province,
-			Order_PostalCode as PostalCode,
+			Orders.Order_Id as "Id",
+			Order_Date as "Date",
+			Order_CardExpiry as "CardExpiry",
+			Order_CardType as "CardType",
+			Order_CardNumber as "CardNumber",
+			Order_Street as "Street",
+			Order_City as "City",
+			Order_Province as "Province",
+			Order_PostalCode as "PostalCode",
 			LineItem_ID as "FavouriteLineItem.Id",
 			LineItem_Code as "FavouriteLineItem.Code",
 			LineItem_Quantity as "FavouriteLineItem.Quantity",

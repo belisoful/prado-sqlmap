@@ -12,7 +12,7 @@
 		select
 		Category_ID as Id,
 		Category_Name as Name,
-		Category_Guid as Guid
+		Category_Guid as GuidString
 		from Categories  
 		where Category_ID = #value# 
 	</select>
@@ -73,13 +73,15 @@
 		select SCOPE_IDENTITY() as value
 	</statement>
 
-	<statement id="InsertCategoryNull" parameterMap="insert-null-params" resultClass="int">
+	<insert id="InsertCategoryNull" parameterMap="insert-null-params">
+		<selectKey property="Id" type="post" resultClass="int">
+			SELECT CAST(IDENT_CURRENT('Categories') AS INT) AS value
+		</selectKey>
 		insert into Categories  
 			(Category_Name, Category_Guid)
 		values 
-			(?,?);
-		select SCOPE_IDENTITY() as value
-	</statement>
+			(?,?)
+	</insert>
 			
 	<update id="UpdateCategoryViaParameterMap" parameterMap="UpdateParam">
 		update Categories set
@@ -144,7 +146,7 @@
 	
 	<parameterMap id="insert-null-params">
 		<parameter property="Name" column="Category_Name"/>
-		<parameter property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="UniqueIdentifier"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
+		<parameter property="GuidString" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="Varchar"/>
 	</parameterMap>
 			
 	<parameterMap id="UpdateParam" extends="InsertParam">

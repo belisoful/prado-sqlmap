@@ -48,15 +48,17 @@ class DefaultScriptRunner
 }
 
 /**
- * Script runner for IBM DB2. Silently ignores SQLSTATE 42704 ("undefined name")
- * errors so that DROP TABLE/SEQUENCE statements do not abort on a fresh database
- * where the objects do not yet exist.
+ * Script runner for IBM DB2. Strips full-line "--" comments before splitting on
+ * semicolons, so a semicolon inside a comment does not split a statement.
+ * Silently ignores SQLSTATE 42704 ("undefined name") errors so that DROP
+ * TABLE/SEQUENCE statements do not abort on a fresh database where the objects
+ * do not yet exist.
  */
 class IbmScriptRunner extends DefaultScriptRunner
 {
 	public function runScript($connection, $script)
 	{
-		$sql = file_get_contents($script);
+		$sql = preg_replace('/^\s*--.*$/m', '', file_get_contents($script));
 		$lines = explode(';', $sql);
 		foreach ($lines as $line) {
 			$line = trim($line);

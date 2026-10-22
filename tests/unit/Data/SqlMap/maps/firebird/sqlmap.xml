@@ -2,7 +2,7 @@
 <sqlMapConfig>
 
 	<properties>
-		<property name="selectKey" value="SELECT GEN_ID(categories_gen, 0) AS value FROM RDB$DATABASE" />
+		<property name="selectKey" value="SELECT GEN_ID(categories_gen, 0) AS &quot;value&quot; FROM RDB$DATABASE" />
 		<property name="MyCategoryName" value="'Film'" />
 		<property name="accountName" value="'Joe'" />
 	</properties>

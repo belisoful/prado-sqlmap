@@ -176,10 +176,10 @@
 						parameterClass="int"
 						resultClass="array">
 			select
-			Account_Id as Id,
-			Account_FirstName as FirstName,
-			Account_LastName as LastName,
-			Account_Email as EmailAddress
+			Account_Id as "Id",
+			Account_FirstName as "FirstName",
+			Account_LastName as "LastName",
+			Account_Email as "EmailAddress"
 			from Accounts
 			where Account_Id = #value#
 		</select>
@@ -187,10 +187,10 @@
 		<select id="GetAllAccountsAsHashtableViaResultClass"
 						resultClass="array">
 			select
-			Account_Id as Id,
-			Account_FirstName as FirstName,
-			Account_LastName as LastName,
-			Account_Email as EmailAddress
+			Account_Id as "Id",
+			Account_FirstName as "FirstName",
+			Account_LastName as "LastName",
+			Account_Email as "EmailAddress"
 			from Accounts
 			order by Account_Id
 		</select>
@@ -291,7 +291,7 @@
 		</select>
 
 		 <select id="GetEmailAddressViaResultClass" resultClass="string">
-			select Account_Email as value
+			select Account_Email as "value"
 			from Accounts
 			where Account_Id = #value#
 		</select>
@@ -432,8 +432,8 @@
 		<delete id="DeleteAccount"
 			parameterClass="Account">
 			delete from Accounts
-			where Account_Id = #Id#
-			and Account_Id = #Id#
+			where Account_Id = CAST(#Id# AS INTEGER)
+			and Account_Id = CAST(#Id# AS INTEGER)
 		</delete>
 
 		<!-- Extends statement -->

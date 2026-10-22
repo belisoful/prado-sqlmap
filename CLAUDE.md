@@ -197,7 +197,7 @@ The phpunit bootstrap (`tests/test_tools/phpunit_bootstrap.php`) loads `PradoUni
 
 - Indentation: **tabs** (not spaces)
 - Line endings: Unix (`\n`)
-- PHP minimum: **8.1** (CI tests 8.1, 8.2, 8.3)
+- PHP minimum: **8.1** (CI tests 8.2, 8.3, 8.4, 8.5; the `pradosoft/prado` dev dependency requires 8.2)
 - PSR-12 enforced via php-cs-fixer
 - Use `?` for single nullable types and in doc blocks
 

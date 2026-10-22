@@ -4,6 +4,7 @@ require_once(__DIR__ . '/common.php');
 
 use Prado\Data\SqlMap\DataMapper\TSqlMapTypeHandler;
 use Prado\Data\SqlMap\TSqlMapManager;
+use Prado\Test\Unit\PradoUnit;
 
 abstract class BaseCase extends PHPUnit\Framework\TestCase
 {
@@ -68,13 +69,7 @@ abstract class BaseCase extends PHPUnit\Framework\TestCase
 		// PHP static properties declared on a base class are shared across all
 		// subclasses — without this reset, the MySQL TDbConnection left behind by
 		// MysqlStatementTest would be picked up by PgsqlStatementTest.
-		if (static::$connection !== null) {
-			try {
-				static::$connection->setActive(false);
-			} catch (\Throwable $ignored) {
-			}
-			static::$connection = null;
-		}
+		static::closeConnections();
 		static::$sqlmap = null;
 		static::$mapper = null;
 		static::$config = null;
@@ -133,7 +128,7 @@ abstract class BaseCase extends PHPUnit\Framework\TestCase
 					// Schema initialisation failed — treat DB as unavailable.
 					static::$unavailableKey = static::$dbDriver;
 					static::$unavailableCause = $e;
-					static::$unavailableReason = 'Schema init failed (' . static::$dbDriver . ')';
+					static::$unavailableReason = 'Schema init failed (' . static::$dbDriver . '): ' . $e->getMessage();
 					static::$config = null;
 				}
 				return;
@@ -148,13 +143,32 @@ abstract class BaseCase extends PHPUnit\Framework\TestCase
 		}
 		// Close the connection so the next class (possibly a different driver) starts
 		// fresh.  See the setUpBeforeClass() comment above.
-		if (static::$connection !== null) {
+		static::closeConnections();
+	}
+
+	/**
+	 * Closes the shared connection and the current config's connection.
+	 * The config connection is closed even when $connection was never assigned,
+	 * because TActiveRecordManager may still hold it. An open pdo_firebird
+	 * connection keeps an implicit transaction alive, and its table locks block
+	 * the next class's DROP TABLE indefinitely.
+	 */
+	protected static function closeConnections(): void
+	{
+		$connections = [static::$connection];
+		if (static::$config !== null) {
+			$connections[] = static::$config->getConnection();
+		}
+		foreach ($connections as $connection) {
+			if ($connection === null) {
+				continue;
+			}
 			try {
-				static::$connection->setActive(false);
+				$connection->setActive(false);
 			} catch (\Throwable $ignored) {
 			}
-			static::$connection = null;
 		}
+		static::$connection = null;
 	}
 
 	public static function getConnection()

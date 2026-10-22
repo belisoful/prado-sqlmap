@@ -494,6 +494,8 @@ class TMappedStatement extends \Prado\TComponent implements IMappedStatement
 
 	/**
 	 * Apply result mapping.
+	 * The PRADO_ROWNUM column is removed from the row. TIbmCommandBuilder::applyLimitOffset()
+	 * pages through a ROW_NUMBER() subquery, and its outer "SELECT *" returns that helper column.
 	 * @param array $row a result set row retrieved from the database
 	 * @param null|object $resultObject the result object, will create if necessary.
 	 * @return object the result filled with data, null if not filled.
@@ -503,6 +505,7 @@ class TMappedStatement extends \Prado\TComponent implements IMappedStatement
 		if ($row === false) {
 			return null;
 		}
+		unset($row['PRADO_ROWNUM'], $row['prado_rownum']);
 
 		$resultMapName = $this->_statement->getResultMap();
 		$resultClass = $this->_statement->getResultClass();

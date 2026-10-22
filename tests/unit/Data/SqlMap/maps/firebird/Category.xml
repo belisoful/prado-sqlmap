@@ -23,7 +23,7 @@
 		
 		<select id="GetCategoryGuid" parameterClass="Integer" resultClass="guid">
 			select
-			Category_Guid as value
+			Category_Guid as "value"
 			from Categories  
 			where Category_ID = #value# 
 		</select>
@@ -32,7 +32,7 @@
 		<!-- Needs to be <insert> vs <statement> for MySql due to selectKey -->
 		<insert id="InsertCategory" parameterClass="Category">
 			<selectKey property="Id" type="post" resultClass="int">
-				SELECT GEN_ID(categories_gen, 0) AS value FROM RDB$DATABASE
+				SELECT GEN_ID(categories_gen, 0) AS "value" FROM RDB$DATABASE
             </selectKey>			
   			insert into Categories  
 				(Category_Name, Category_Guid) 
@@ -43,7 +43,7 @@
 		<!--  -->
 		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">
-				SELECT GEN_ID(categories_gen, 0) AS value FROM RDB$DATABASE
+				SELECT GEN_ID(categories_gen, 0) AS "value" FROM RDB$DATABASE
             </selectKey>			
             insert into Categories  
 				(Category_Name, Category_Guid) 
@@ -54,7 +54,7 @@
 		<!-- Needs to be <insert> vs <statement> for MySql due to selectKey -->		
 		<insert id="InsertCategoryViaParameterMap" parameterMap="InsertParam">
 			<selectKey property="Id" type="post" resultClass="int">
-				SELECT GEN_ID(categories_gen, 0) AS value FROM RDB$DATABASE
+				SELECT GEN_ID(categories_gen, 0) AS "value" FROM RDB$DATABASE
             </selectKey>
 			insert into Categories  
 				(Category_Name, Category_Guid)
@@ -65,7 +65,7 @@
 		<!-- Needs to be <insert> vs <statement> for MySql due to selectKey -->		
 		<insert id="InsertCategoryNull" parameterMap="insert-null-params">
 			<selectKey property="Id" type="post" resultClass="int">
-				SELECT GEN_ID(categories_gen, 0) AS value FROM RDB$DATABASE
+				SELECT GEN_ID(categories_gen, 0) AS "value" FROM RDB$DATABASE
             </selectKey>
 			insert into Categories  
 				(Category_Name, Category_Guid)
@@ -87,7 +87,7 @@
 		
 		<insert id="InsertCategoryGenerate" parameterMap="insert-generate-params">
 			<selectKey property="Id" type="post" resultClass="int">
-				SELECT GEN_ID(categories_gen, 0) AS value FROM RDB$DATABASE
+				SELECT GEN_ID(categories_gen, 0) AS "value" FROM RDB$DATABASE
             </selectKey>
             <generate table="Categories" />
 		</insert>

@@ -18,9 +18,10 @@ class ActiveAccount extends TActiveRecord
 	const TABLE = 'accounts';
 
 	/**
-	 * Maps PostgreSQL lowercase column names to the mixed-case PHP property names.
-	 * On MySQL and SQLite the schema returns 'Account_Id' (matching the property),
-	 * so these entries are simply never looked up on those drivers.
+	 * Maps folded column names to the mixed-case PHP property names.
+	 * - PostgreSQL and IBM DB2 metadata report lowercase names ('account_id').
+	 * - Firebird metadata reports uppercase names ('ACCOUNT_ID').
+	 * - MySQL and SQLite report 'Account_Id', which matches the property directly.
 	 */
 	public static $COLUMN_MAPPING = [
 		'account_id' => 'Account_Id',
@@ -29,6 +30,12 @@ class ActiveAccount extends TActiveRecord
 		'account_email' => 'Account_Email',
 		'account_banner_option' => 'Account_Banner_Option',
 		'account_cart_option' => 'Account_Cart_Option',
+		'ACCOUNT_ID' => 'Account_Id',
+		'ACCOUNT_FIRSTNAME' => 'Account_FirstName',
+		'ACCOUNT_LASTNAME' => 'Account_LastName',
+		'ACCOUNT_EMAIL' => 'Account_Email',
+		'ACCOUNT_BANNER_OPTION' => 'Account_Banner_Option',
+		'ACCOUNT_CART_OPTION' => 'Account_Cart_Option',
 	];
 
 	public static function finder($className = __CLASS__)
@@ -103,6 +110,13 @@ abstract class ActiveRecordSqlMapTestCase extends BaseCase
 		// markLoaded() transitions to STATE_LOADED so save() calls update() instead of insert().
 		$record->markLoaded();
 		$record->Account_FirstName = "Testing 123";
+
+		// The record has a NULL Account_Email. TDbCommandBuilder binds NULL as
+		// PDO::PARAM_NULL, which pdo_ibm rejects with "Unknown parameter type".
+		// Prado's TDbDriverCapabilities::requiresUntypedParameters() resolves it.
+		if (static::$dbDriver === 'ibm' && !class_exists('\Prado\Data\TDbDriverCapabilities')) {
+			$this->markTestSkipped('ActiveRecord NULL binding on pdo_ibm requires Prado\Data\TDbDriverCapabilities.');
+		}
 
 		$this->assertTrue($record->save());
 
