@@ -2,7 +2,7 @@
 
 # Migration guide
 
-SqlMap shipped inside the PRADO framework from PRADO 3.1. PRADO 4.4 extracts it into this package. The class names and namespaces are unchanged, so most applications need only add the dependency and clear the application cache.
+SqlMap shipped inside the PRADO framework from PRADO 3.1. PRADO 4.4 extracts it into this package. The class names and namespaces are unchanged, so most applications need only add the dependency.
 
 ## Install the package
 
