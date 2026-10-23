@@ -10,6 +10,7 @@ First standalone release, planned as 1.0.0, for PRADO 4.4. SqlMap moves out of t
 
 ### Added
 
+- `TSqlMapManager::VERSION` holds the package version and `TSqlMapManager::getVersion()` (the `Version` property) returns the version that built the manager, in the form of `Prado::getVersion()`. The version is serialized with the manager. `TSqlMapConfig` discards a cached manager whose version is not `VERSION` and rebuilds it, so the application cache does not need to be cleared after an upgrade.
 - An `<insert>`, `<update>`, or `<delete>` statement with a `cacheModel` attribute flushes that cache model when it executes, the same as a `<flushOnExecute>` entry. The attribute was previously accepted and ignored (#5).
 - `composer.json` declares `extra.prado` for PRADO 4.4: `bootstrap` (`TSqlMapConfig`), `error-messages` (`src/Data/SqlMap/DataMapper/messages.txt`), and `class-map` (`config/classes.json`). The legacy top-level `extra.bootstrap` remains for PRADO 4.3.
 - `config/classes.json` maps the 55 SqlMap short class names (`TSqlMapConfig`, `TSqlMapFifoCache`, ...) to their FQNs. It replaces the SqlMap entries of the framework's `classes.php`.

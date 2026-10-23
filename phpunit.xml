@@ -10,6 +10,7 @@
 	  <file>./tests/unit/Data/SqlMap/SqlMapSleepTest.php</file>
 	  <file>./tests/unit/Data/SqlMap/StatementExtendsTest.php</file>
 	  <file>./tests/unit/Data/SqlMap/Ticket589Test.php</file>
+	  <file>./tests/unit/Data/SqlMap/TSqlMapManagerVersionTest.php</file>
 	</testsuite>
 	<!-- Driver-specific integration test suites — used by dedicated CI jobs only. -->
 	<testsuite name="db-mysql">

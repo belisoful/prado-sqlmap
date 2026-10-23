@@ -38,11 +38,21 @@ use Prado\Prado;
  * $result = $sqlmap->queryForObject('Products');
  * ```
  *
+ * {@see getVersion Version} is the package version that built the manager. It is
+ * serialized with the manager, so a manager restored from the application cache
+ * reports the version that wrote the cache entry.
+ *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @since 3.1
  */
 class TSqlMapManager extends \Prado\TComponent
 {
+	/**
+	 * Version of this package. Equal to {@see getVersion} for a new manager.
+	 * @since 4.4.0
+	 */
+	public const VERSION = '1.0.0';
+
 	private $_mappedStatements;
 	private $_resultMaps;
 	private $_parameterMaps;
@@ -52,6 +62,11 @@ class TSqlMapManager extends \Prado\TComponent
 	private $_connection;
 	private $_gateway;
 	private $_cacheDependencies;
+	/**
+	 * @var ?string package version that built this manager. Null for a manager
+	 * unserialized from a cache entry written before the version was recorded.
+	 */
+	private $_version;
 
 	/**
 	 * Constructor, create a new SqlMap manager.
@@ -60,12 +75,28 @@ class TSqlMapManager extends \Prado\TComponent
 	public function __construct($connection = null)
 	{
 		$this->_connection = $connection;
+		$this->_version = self::VERSION;
 
 		$this->_mappedStatements = new TMap();
 		$this->_resultMaps = new TMap();
 		$this->_parameterMaps = new TMap();
 		$this->_cacheModels = new TMap();
 		parent::__construct();
+	}
+
+	/**
+	 * The version of this package that built the manager, in the form of
+	 * {@see \Prado\Prado::getVersion()}. A new manager reports {@see VERSION}.
+	 * A manager unserialized from the application cache reports the version of
+	 * the package that wrote the entry, or null when that package recorded no
+	 * version. {@see TSqlMapConfig} discards a cached manager whose version is
+	 * not {@see VERSION}.
+	 * @return ?string package version that built this manager.
+	 * @since 4.4.0
+	 */
+	public function getVersion(): ?string
+	{
+		return $this->_version;
 	}
 
 	/**

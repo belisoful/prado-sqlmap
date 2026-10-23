@@ -165,6 +165,7 @@ tests/
 - **`if` statements** always use a block (`{}`), never a single-line body.
 - **Backward compatibility** — all changes must be backward compatible for point releases.
 - **`@since` tag** — use the next release version when adding new methods or classes; omit the method tag when it matches the class tag. Check prado's `CLAUDE.md` for the current next-release version number.
+- **Package version** — `TSqlMapManager::VERSION` is the package version. Bump it with each release; `TSqlMapConfig` discards cached managers built by another version.
 - **Uniform Access Principal / Self Encapsulation** required — access own properties via getters/setters, not raw `$this->_prop`.
 - **Error codes** for PRADO exceptions are defined in `src/Data/SqlMap/DataMapper/messages.txt`.
 - **`@author` tags** — only Wei Zhuo, Brad Anderson, and Fabio Bas are listed as extension authors.
