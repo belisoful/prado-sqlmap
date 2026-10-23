@@ -56,13 +56,12 @@ Statements with a `cacheModel` build their cache key from the SQL text. Cached s
 
 ### Serialized managers
 
-With `EnableCache="true"`, `TSqlMapConfig` stores the parsed `TSqlMapManager` in the application cache. The serialized form of several classes differs from the framework copy. Clear the application cache once after upgrading so the manager is rebuilt.
+With `EnableCache="true"`, `TSqlMapConfig` stores the parsed `TSqlMapManager` in the application cache. The serialized form of several classes differs from the framework copy. `TSqlMapConfig` detects this: a cached manager that reports a `Version` other than `TSqlMapManager::VERSION` (the framework copy reports none) is discarded and the manager is rebuilt from the config files on the next request. No cache clearing is needed.
 
 ## Verifying the move
 
 After installing the package:
 
 1. Confirm `class="TSqlMapConfig"` module definitions still resolve.
-2. Clear the application cache, or delete the cache files under `protected/runtime`.
-3. Replace any comparison of `TSqlMapException::getErrorCode()` with message text.
-4. Run the application's own tests against its mapped statements.
+2. Replace any comparison of `TSqlMapException::getErrorCode()` with message text.
+3. Run the application's own tests against its mapped statements.

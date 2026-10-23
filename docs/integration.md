@@ -76,7 +76,7 @@ return [
 
 `TSqlMapConfig` bootstraps the extension. On first access of its `Client` property it:
 
-1. Checks the application cache for a previously serialized [`TSqlMapManager`](#tsqlmapmanager) (when `EnableCache` is `true`).
+1. Checks the application cache for a previously serialized [`TSqlMapManager`](#tsqlmapmanager) (when `EnableCache` is `true`). A cached manager whose `Version` is not `TSqlMapManager::VERSION` was written by another release of this package and is ignored.
 2. If not cached, instantiates a new `TSqlMapManager`, calls `configureXml()` with the resolved config file path, and stores the result in the cache.
 3. Calls `getSqlmapGateway()` on the manager and returns the resulting [`TSqlMapGateway`](#tsqlmapgateway).
 
@@ -108,6 +108,7 @@ When `ConnectionID` is set and the manager is loaded from cache, `TSqlMapConfig`
 | `getDbConnection` | `getDbConnection(): TDbConnection` | Returns the active database connection. |
 | `setDbConnection` | `setDbConnection(TDbConnection $conn): void` | Replaces the database connection (used by `TSqlMapConfig` after a cache hit). |
 | `flushCacheModels` | `flushCacheModels(): void` | Flushes all statement-level cache models registered with this manager. |
+| `getVersion` | `getVersion(): ?string` | Returns the package version that built the manager, in the form of `Prado::getVersion()`. A new manager returns `TSqlMapManager::VERSION`; a manager unserialized from a cache written by another release returns that release's version, or `null` when none was recorded. |
 
 The manager is also the target for direct (non-PRADO) use:
 

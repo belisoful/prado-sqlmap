@@ -79,7 +79,9 @@ use Prado\TPropertyValue;
  * config file path) so that XML parsing is skipped on subsequent requests.
  * Cache entries are invalidated automatically when the config files change
  * unless the application is running in {@see \Prado\TApplicationMode::Performance}
- * mode.
+ * mode. A cached manager whose {@see TSqlMapManager::getVersion() Version} is not
+ * {@see TSqlMapManager::VERSION} was written by another release of this package;
+ * it is discarded and the manager is rebuilt from the config files.
  *
  * @author Wei Zhuo <weizho[at]gmail[dot]com>
  * @since 3.1
@@ -157,8 +159,9 @@ class TSqlMapConfig extends TDataSourceConfig
 	}
 
 	/**
-	 * Loads SqlMap manager from cache.
-	 * @return ?TSqlMapManager SqlMap manager intance if load was successful, null otherwise.
+	 * Loads SqlMap manager from cache. A cached manager built by another version
+	 * of this package is ignored, so the caller rebuilds it and replaces the entry.
+	 * @return ?TSqlMapManager SqlMap manager instance if load was successful, null otherwise.
 	 */
 	protected function loadCachedSqlMapManager()
 	{
@@ -166,7 +169,7 @@ class TSqlMapConfig extends TDataSourceConfig
 			$cache = $this->getApplication()->getCache();
 			if ($cache !== null) {
 				$manager = $cache->get($this->getCacheKey());
-				if ($manager instanceof TSqlMapManager) {
+				if ($manager instanceof TSqlMapManager && $manager->getVersion() === TSqlMapManager::VERSION) {
 					return $manager;
 				}
 			}

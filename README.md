@@ -904,7 +904,7 @@ Clinton Begin started iBATIS in 2001, and its SQL Maps component (2002) mapped S
 
 ## Versioning
 
-The package has its own version line, starting at 1.0.0, independent of the PRADO framework version. The first release pairs with PRADO 4.4, the release that removes SqlMap from the framework. Point releases stay backward compatible. Changes are listed in the [changelog](CHANGELOG.md).
+The package has its own version line, starting at 1.0.0, independent of the PRADO framework version. The first release pairs with PRADO 4.4, the release that removes SqlMap from the framework. Point releases stay backward compatible. Changes are listed in the [changelog](CHANGELOG.md). The version is available at runtime as `TSqlMapManager::VERSION`, and `TSqlMapManager::getVersion()` reports the version that built a manager instance.
 
 ## License
 
